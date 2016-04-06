@@ -12,6 +12,7 @@ require 'pronto/config_file'
 require 'pronto/config'
 
 require 'pronto/clients/bitbucket_client'
+require 'pronto/clients/bitbucket_server_client'
 
 require 'pronto/git/repository'
 require 'pronto/git/patches'
@@ -25,6 +26,7 @@ require 'pronto/runners'
 require 'pronto/github'
 require 'pronto/gitlab'
 require 'pronto/bitbucket'
+require 'pronto/bitbucket_server'
 
 require 'pronto/formatter/colorizable'
 require 'pronto/formatter/text_formatter'
