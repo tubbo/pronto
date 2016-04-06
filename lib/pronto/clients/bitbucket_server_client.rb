@@ -1,16 +1,16 @@
 class BitbucketServerClient
   include HTTParty
-  #base_uri "https://api.bitbucket.org/1.0"
 
   def initialize(username, password, hostname)
-    self.base_uri = hostname
+    self.class.base_uri "https://#{hostname}/rest/api/1.0"
     @credentials = { username: username, password: password }
-    @headers = { basic_auth: @credentials }
+    @headers = { basic_auth: @credentials, 'Content-Type' => 'application/json' }
   end
 
   def commit_comments(slug, sha, options={})
     options.merge!(@headers)
-    response = self.class.get("/repositories/#{slug}/commits/#{sha}/comments", options)
+    project, repo = slug.split '/'
+    response = self.class.get("/projects/#{project}/repos/#{repo}/commits/#{sha}/comments", options)
     openstruct(response.parsed_response)
   end
 
@@ -21,18 +21,21 @@ class BitbucketServerClient
       line_to: position,
       filename: path
     }
-    self.class.post("/repositories/#{slug}/commits/#{sha}/comments", options)
+    project, repo = slug.split '/'
+    self.class.post("/projects/#{project}/repos/#{repo}/commits/#{sha}/comments", options)
   end
 
   def pull_comments(slug, pr_id, options={})
     options.merge!(@headers)
-    response = self.class.get("/repositories/#{slug}/pull-requests/#{pr_id}/comments", options)
+    project, repo = slug.split '/'
+    response = self.class.get("/projects/#{project}/repos/#{repo}/pull-requests/#{pr_id}/comments", options)
     openstruct(response.parsed_response)
   end
 
   def pull_requests(slug, options={})
     options.merge!(@headers)
-    response = self.class.get("https://api.bitbucket.org/2.0/repositories/#{slug}/pull-requests?state=OPEN", options)
+    project, repo = slug.split '/'
+    response = self.class.get("/projects/#{project}/repos/#{repo}/pull-requests?state=OPEN", options)
     openstruct(response.parsed_response['values'])
   end
 
@@ -43,7 +46,8 @@ class BitbucketServerClient
       line_to: position,
       filename: path
     }
-    self.class.post("/repositories/#{slug}/pull-requests/#{pull_id}/comments", options)
+    project, repo = slug.split '/'
+    self.class.post("/projects/#{project}/repos/#{repo}/pull-requests/#{pull_id}/comments", options)
   end
 
   def openstruct(response)
