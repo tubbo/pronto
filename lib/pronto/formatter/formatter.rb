@@ -16,6 +16,7 @@ module Pronto
       'gitlab' => GitlabFormatter,
       'bitbucket' => BitbucketFormatter,
       'bitbucket_pr' => BitbucketPullRequestFormatter,
+      'stash' => StashFormatter,
       'json' => JsonFormatter,
       'checkstyle' => CheckstyleFormatter,
       'text' => TextFormatter,
