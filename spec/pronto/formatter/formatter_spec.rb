@@ -4,6 +4,11 @@ module Pronto
       context 'single' do
         subject { Formatter.get(name).first }
 
+        context 'stash' do
+          let(:name) { 'stash' }
+          it { should be_an_instance_of StashFormatter }
+        end
+
         context 'github' do
           let(:name) { 'github' }
           it { should be_an_instance_of GithubFormatter }
@@ -67,7 +72,7 @@ module Pronto
 
     describe '.names' do
       subject { Formatter.names }
-      it { should =~ %w(github github_pr gitlab bitbucket bitbucket_pr json checkstyle text null) }
+      it { should =~ %w(github github_pr gitlab bitbucket bitbucket_pr json checkstyle text null stash) }
     end
   end
 end

@@ -4,6 +4,7 @@ require 'rspec'
 require 'rspec/its'
 
 require 'pronto'
+require 'pry'
 
 RSpec.configure do |config|
   config.order = :random

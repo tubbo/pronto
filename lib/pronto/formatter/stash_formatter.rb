@@ -1,6 +1,14 @@
 module Pronto
   module Formatter
     class StashFormatter
+      attr_reader :host, :user, :pass
+
+      def initialize
+        @host = ENV['STASH_HOST']
+        @user = ENV['STASH_USERNAME']
+        @pass = ENV['STASH_PASSWORD']
+      end
+
       def format(messages, repo, patches)
         commits = messages.uniq.map do |message|
           client.create_comment(
@@ -18,9 +26,7 @@ module Pronto
 
       def client
         @client ||= Stash::Client.new(
-          host: ENV['STASH_HOST'],
-          username: ENV['STASH_USERNAME'],
-          password: ENV['STASH_PASSWORD']
+          host: @host, username: @user, password: @pass
         )
       end
     end
