@@ -4,41 +4,39 @@ module Pronto
   module Formatter
     RSpec.describe StashFormatter do
       before do
-        ENV['STASH_HOST'] = 'stash.tools.weblinc.com'
-        ENV['STASH_USERNAME'] = 'tscott'
-        ENV['STASH_PASSWORD'] = 'n/a'
+        Stash::PULL_REQUEST_ID = '1'
       end
 
       let :formatter do
         StashFormatter.new
       end
 
-      describe '#initialize' do
-        it { formatter.host.should == 'stash.tools.weblinc.com' }
-        it { formatter.user.should == 'tscott' }
-        it { formatter.pass.should == 'n/a' }
-      end
-
       describe '#format' do
         let :messages do
           [
             double(
-              commit_sha: '1a4548b',
-              msg: 'done broke the whole app',
-              path: 'config/application.rb',
-              position: 17
+              commit_sha: '60e64cbf2accf976918eccde80bb55facc16c710',
+              msg: 'everything is broken',
+              path: 'README.md',
+              line: double(new_lineno: 1)
             )
           ]
         end
 
         let :repo do
+          'BAD/estuyo-cookbook'
         end
 
         let :patches do
+          []
+        end
+
+        let :message do
+          "#{messages.count} Pronto messages posted to Stash"
         end
 
         specify do
-          formatter.format(messages, repo, patches).should == "1 Pronto messages posted to Stash"
+          formatter.format(messages, repo, patches).should == message
         end
       end
     end

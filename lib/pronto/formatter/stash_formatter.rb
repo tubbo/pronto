@@ -1,21 +1,22 @@
 module Pronto
   module Formatter
     class StashFormatter
-      attr_reader :host, :user, :pass
-
-      def initialize
-        @host = ENV['STASH_HOST']
-        @user = ENV['STASH_USERNAME']
-        @pass = ENV['STASH_PASSWORD']
-      end
-
-      def format(messages, repo, patches)
+      def format(messages, slug, patches)
         commits = messages.uniq.map do |message|
+          type = 'CONTEXT'
+          project, repo = slug.split('/')
           client.create_comment(
-            sha: message.commit_sha,
-            body: message.msg,
-            path: message.path,
-            position: message.line.new_lineno
+            project: project,
+            repo: repo,
+            text: message.msg,
+            #sha: message.commit_sha,
+            anchor: {
+              line: message.line.new_lineno,
+              lineType: type,
+              fileType: 'TO',
+              path: message.path,
+              srcPath: message.path
+            }
           )
         end
 
@@ -25,9 +26,7 @@ module Pronto
       private
 
       def client
-        @client ||= Stash::Client.new(
-          host: @host, username: @user, password: @pass
-        )
+        @client ||= Stash::Client.new
       end
     end
   end
